@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/config/backgrounds.json</file>
+    </qresource>
+</RCC>
