@@ -19,6 +19,18 @@ public:
 
 private:
     Ui::NewLevelForm *ui;
+
+public slots:
+
+    void createPressed();
+    void cancelPressed();
+
+signals:
+
+    void finished(const QString &name,
+                  qreal width, qreal height,
+                  const QString &background);
+
 };
 
 #endif // NEWLEVELFORM_H

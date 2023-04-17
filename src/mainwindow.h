@@ -21,16 +21,12 @@ private:
 
     std::vector<QString> m_backgrounds;
 
-
     void loadConfigBackground();
 
-
 signals:
-
 
 public slots:
 
     void quitEditor();
-
 };
 #endif // MAINWINDOW_H
