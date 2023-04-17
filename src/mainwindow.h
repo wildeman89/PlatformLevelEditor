@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsScene>
 #include <vector>
 
 QT_BEGIN_NAMESPACE
@@ -21,7 +22,13 @@ private:
 
     std::vector<QString> m_backgrounds;
 
+    bool m_editing_enabled;
+
     void loadConfigBackground();
+
+    void disableEditor();
+    void enableEditor();
+    bool isEditing();
 
 signals:
 

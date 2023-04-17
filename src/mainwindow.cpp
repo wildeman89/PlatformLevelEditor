@@ -14,12 +14,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    disableEditor();
+
+
     // load config files
     loadConfigBackground();
 
     connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
-
 }
 
 MainWindow::~MainWindow()
@@ -56,6 +58,25 @@ void MainWindow::loadConfigBackground()
     }
 }
 
+void MainWindow::disableEditor()
+{
+    m_editing_enabled = false;
+    ui->graphicsView->setEnabled(false);
+    ui->treeWidget->setEnabled(false);
+}
+
+void MainWindow::enableEditor()
+{
+    m_editing_enabled = true;
+    ui->graphicsView->setEnabled(true);
+    ui->treeWidget->setEnabled(true);
+}
+
+bool MainWindow::isEditing()
+{
+    return m_editing_enabled;
+}
+
 void MainWindow::quitSelected()
 {
     QApplication::quit();
@@ -72,7 +93,7 @@ void MainWindow::newLevelFormFinished(const QString &name,
                                       const QSizeF &size,
                                       const QString &background)
 {
-
+    enableEditor();
 
 }
 
