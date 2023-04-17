@@ -27,6 +27,9 @@ signals:
 
 public slots:
 
-    void quitEditor();
+    void quitSelected();
+    void newLevelSelected();
+
+
 };
 #endif // MAINWINDOW_H

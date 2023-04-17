@@ -65,6 +65,8 @@ void NewLevelForm::createPressed()
                   width,
                   height,
                   ui->backgrounds->currentText());
+
+    deleteLater();
 }
 
 void NewLevelForm::cancelPressed()

@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     // load config files
     loadConfigBackground();
 
-    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitEditor);
+    connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
 }
 
 MainWindow::~MainWindow()
@@ -54,8 +55,14 @@ void MainWindow::loadConfigBackground()
     }
 }
 
-void MainWindow::quitEditor()
+void MainWindow::quitSelected()
 {
     QApplication::quit();
+}
+
+void MainWindow::newLevelSelected()
+{
+    NewLevelForm *form = new NewLevelForm(m_backgrounds);
+    form->show();
 }
 
