@@ -17,5 +17,14 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+
+signals:
+
+
+public slots:
+
+    void quitEditor();
+
 };
 #endif // MAINWINDOW_H
