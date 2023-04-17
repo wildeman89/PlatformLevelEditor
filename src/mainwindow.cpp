@@ -7,15 +7,21 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+#define BORDER 256
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+      m_scene(nullptr),
+      m_editing_enabled(true)
 {
     ui->setupUi(this);
 
-    disableEditor();
+    m_scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(m_scene);
 
+    disableEditor();
 
     // load config files
     loadConfigBackground();
@@ -93,7 +99,24 @@ void MainWindow::newLevelFormFinished(const QString &name,
                                       const QSizeF &size,
                                       const QString &background)
 {
-    enableEditor();
+    if(isEditing()) {
 
+        // ask if they want to save
+        // before opening another level
+
+        m_scene->clear();
+    }
+
+    m_level_name = name;
+    m_level_size = size;
+    m_level_background = background;
+
+    m_scene->setSceneRect(-BORDER, -BORDER,
+                          size.width() + BORDER * 2,
+                          size.height() + BORDER * 2);
+
+    m_scene->addRect(QRectF(QPointF(0,0), size));
+
+    enableEditor();
 }
 

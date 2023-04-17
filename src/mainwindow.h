@@ -20,6 +20,12 @@ public:
 private:
     Ui::MainWindow *ui;
 
+    QGraphicsScene *m_scene;
+
+    QString m_level_name;
+    QSizeF m_level_size;
+    QString m_level_background;
+
     std::vector<QString> m_backgrounds;
 
     bool m_editing_enabled;
