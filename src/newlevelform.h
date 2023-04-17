@@ -28,7 +28,7 @@ public slots:
 signals:
 
     void finished(const QString &name,
-                  qreal width, qreal height,
+                  const QSizeF &size,
                   const QString &background);
 
 };

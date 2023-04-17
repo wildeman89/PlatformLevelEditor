@@ -62,8 +62,7 @@ void NewLevelForm::createPressed()
     }
 
     emit finished(ui->levelname->text(),
-                  width,
-                  height,
+                  QSizeF(width,height),
                   ui->backgrounds->currentText());
 
     deleteLater();

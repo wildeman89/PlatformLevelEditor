@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
+
 }
 
 MainWindow::~MainWindow()
@@ -63,6 +64,15 @@ void MainWindow::quitSelected()
 void MainWindow::newLevelSelected()
 {
     NewLevelForm *form = new NewLevelForm(m_backgrounds);
+    connect(form, &NewLevelForm::finished, this, &MainWindow::newLevelFormFinished);
     form->show();
+}
+
+void MainWindow::newLevelFormFinished(const QString &name,
+                                      const QSizeF &size,
+                                      const QString &background)
+{
+
+
 }
 

@@ -29,6 +29,9 @@ public slots:
 
     void quitSelected();
     void newLevelSelected();
+    void newLevelFormFinished(const QString &name,
+                              const QSizeF &size,
+                              const QString &background);
 
 
 };
