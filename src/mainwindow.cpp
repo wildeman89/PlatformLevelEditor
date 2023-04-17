@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "newlevelform.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -14,9 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // load config files
-
     loadConfigBackground();
-
 
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitEditor);
 }
@@ -51,7 +50,6 @@ void MainWindow::loadConfigBackground()
         if(!val.isString()) {
             throw std::invalid_argument("json error: /res/config/backgrounds.json - field: backgrounds must contain strings");
         }
-
         m_backgrounds.push_back(val.toString());
     }
 }
