@@ -29,9 +29,8 @@ void EditorView::dropEvent(QDropEvent *event)
         if(dmodel.dropMimeData(event->mimeData(), event->dropAction(), 0, 0, QModelIndex())) {
             QModelIndex index = dmodel.index(0,0);
 
+            emit itemDropped(index.data().toString(), mapToScene(event->position().toPoint()));
 
-            qDebug() << index.data().toString();
-            qDebug() << mapToScene(event->position().toPoint());
         }
     }
 }

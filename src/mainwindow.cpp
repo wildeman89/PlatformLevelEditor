@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
+
+    connect(ui->graphicsView, &EditorView::itemDropped, this, &MainWindow::itemDropped);
 }
 
 MainWindow::~MainWindow()
@@ -203,5 +205,11 @@ void MainWindow::newLevelFormFinished(const QString &name,
     m_scene->addRect(QRectF(QPointF(0,0), size));
 
     enableEditor();
+}
+
+void MainWindow::itemDropped(const QString &name, const QPointF &pos)
+{
+    qDebug() << name;
+    qDebug() << pos;
 }
 
