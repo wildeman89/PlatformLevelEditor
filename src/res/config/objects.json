@@ -1,7 +1,7 @@
 {
     "objects": [
         {
-            "name":"brick-block",
+            "name":"brick_170x170",
             "path": ":/res/image/platform/brick.png",
             "category": "platform"
         }

@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // load config files
     loadConfigBackground();
+    loadConfigObjects();
 
     connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
@@ -80,6 +81,68 @@ void MainWindow::loadConfigBackground()
             throw std::invalid_argument("json error: /res/config/backgrounds.json - field: backgrounds must contain strings");
         }
         m_backgrounds.push_back(val.toString());
+    }
+}
+
+void MainWindow::loadConfigObjects()
+{
+    QFile file(":/res/config/objects.json");
+    if(!file.open(QFile::ReadOnly)) {
+        throw std::invalid_argument("missing resource: /res/config/objects.json");
+    }
+
+    QByteArray data = file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject root_obj = doc.object();
+
+    if(!root_obj.contains("objects")) {
+        throw std::invalid_argument("json error: /res/config/objects.json - missing field: objects");
+    }
+
+    if(!root_obj["objects"].isArray()) {
+        throw std::invalid_argument("json error: /res/config/objects.json - field: objects must be array");
+    }
+
+    QJsonArray array = root_obj["objects"].toArray();
+
+    for(const QJsonValue &val : array) {
+
+        if(!val.isObject()) {
+            throw std::invalid_argument("json error: /res/config/objects.json - field: objects must contain type: objects");
+        }
+        QJsonObject obj = val.toObject();
+
+        if(!obj.contains("name")) {
+            throw std::invalid_argument("json error: /res/config/objects.json - type: object missing field: name");
+        }
+        if(!obj.contains("path")) {
+            throw std::invalid_argument("json error: /res/config/objects.json - type: object missing field: path");
+        }
+        if(!obj.contains("category")) {
+            throw std::invalid_argument("json error: /res/config/objects.json - type: object missing field: category");
+        }
+
+        QString name = obj["name"].toString();
+        QString path = obj["path"].toString();
+        QString category = obj["category"].toString();
+
+        QTreeWidgetItem *parent;
+
+        if(category == "platform") {
+            parent = m_tree_platforms;
+        } else if(category == "enemy") {
+            parent = m_tree_enemies;
+        } else if(category == "powerup") {
+            parent = m_tree_powerups;
+        } else if(category == "begin-end") {
+            parent = m_tree_begin_end;
+        } else {
+            throw std::invalid_argument("json error: /res/config/objects.json - bad category: " + category.toStdString());
+        }
+
+        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+        item->setText(0, name);
+        item->setIcon(0, QIcon(path));
     }
 }
 

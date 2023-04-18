@@ -43,6 +43,7 @@ private:
 
     void initTreeCategories();
     void loadConfigBackground();
+    void loadConfigObjects();
 
     void disableEditor();
     void enableEditor();
