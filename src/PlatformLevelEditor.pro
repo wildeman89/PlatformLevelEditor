@@ -9,13 +9,19 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    editorscene.cpp \
+    editorview.cpp \
     main.cpp \
     mainwindow.cpp \
-    newlevelform.cpp
+    newlevelform.cpp \
+    treedragwidget.cpp
 
 HEADERS += \
+    editorscene.h \
+    editorview.h \
     mainwindow.h \
-    newlevelform.h
+    newlevelform.h \
+    treedragwidget.h
 
 FORMS += \
     mainwindow.ui \

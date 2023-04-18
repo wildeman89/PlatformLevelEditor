@@ -43,10 +43,10 @@ private:
     QFileIconProvider m_icon_provider;
 
     // pixmaps
-    std::unordered_map<std::string, QPixmap *> pixmaps;
+    std::unordered_map<QString, QPixmap *> pixmaps;
 
-    // categories
-    std::unordered_map<std::string, std::string> categories;
+    // object categories
+    std::unordered_map<QString, std::string> categories;
 
     void initTreeCategories();
     void loadConfigBackground();
