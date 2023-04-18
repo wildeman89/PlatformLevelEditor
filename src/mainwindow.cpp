@@ -143,6 +143,9 @@ void MainWindow::loadConfigObjects()
         QTreeWidgetItem *item = new QTreeWidgetItem(parent);
         item->setText(0, name);
         item->setIcon(0, QIcon(path));
+
+        pixmaps[name] = new QPixmap(path);
+        categories[name] = category.toStdString();
     }
 }
 

@@ -1,9 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <vector>
+#include <unordered_map>
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include <vector>
 #include <QTreeWidget>
 #include <QFileIconProvider>
 
@@ -40,6 +41,12 @@ private:
 
     // default icons
     QFileIconProvider m_icon_provider;
+
+    // pixmaps
+    std::unordered_map<std::string, QPixmap *> pixmaps;
+
+    // categories
+    std::unordered_map<std::string, std::string> categories;
 
     void initTreeCategories();
     void loadConfigBackground();
