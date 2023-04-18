@@ -215,5 +215,6 @@ void MainWindow::itemDropped(const QString &name, const QPointF &pos)
     qreal yV = round(pos.y()/GRID_SIZE)*GRID_SIZE;
     obj->setPos(QPointF(xV, yV));
     m_scene->addItem(obj);
+    m_scene->clearSelection();
 }
 

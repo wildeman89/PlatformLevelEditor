@@ -2,6 +2,8 @@
 
 #include <QPainter>
 #include <QApplication>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
 
 #define GRID_SIZE 16
 
@@ -23,6 +25,13 @@ void EditorObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     Q_UNUSED(widget)
 
     painter->drawPixmap(boundingRect(), *m_pixmap, boundingRect());
+
+    if(isSelected()) {
+        QPen pen(Qt::blue);
+        pen.setWidth(4);
+        painter->setPen(pen);
+        painter->drawRect(QRectF(2,2, boundingRect().width() - 4, boundingRect().height() - 4));
+    }
 }
 
 QVariant EditorObject::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -40,5 +49,12 @@ QVariant EditorObject::itemChange(GraphicsItemChange change, const QVariant &val
     }
     else {
         return QGraphicsItem::itemChange(change, value);
+    }
+}
+
+void EditorObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(event->button() == Qt::RightButton) {
+        scene()->removeItem(this);
     }
 }

@@ -19,6 +19,8 @@ protected:
 
     QVariant itemChange(GraphicsItemChange change,
                             const QVariant &value);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
 
 #endif // EDITOROBJECT_H
