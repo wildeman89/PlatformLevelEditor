@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "newlevelform.h"
+#include "editorobject.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -209,7 +210,8 @@ void MainWindow::newLevelFormFinished(const QString &name,
 
 void MainWindow::itemDropped(const QString &name, const QPointF &pos)
 {
-    qDebug() << name;
-    qDebug() << pos;
+    EditorObject *obj = new EditorObject(name, pixmaps[name]);
+    obj->setPos(pos);
+    m_scene->addItem(obj);
 }
 
