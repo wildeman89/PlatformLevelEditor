@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <vector>
+#include <QTreeWidget>
+#include <QFileIconProvider>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,9 +30,18 @@ private:
     QString m_level_background;
 
     std::vector<QString> m_backgrounds;
-
     bool m_editing_enabled;
 
+    // tree categories
+    QTreeWidgetItem *m_tree_level;
+    QTreeWidgetItem *m_tree_platforms;
+    QTreeWidgetItem *m_tree_enemies;
+    QTreeWidgetItem *m_tree_powerups;
+
+    // default icons
+    QFileIconProvider m_icon_provider;
+
+    void initTreeCategories();
     void loadConfigBackground();
 
     void disableEditor();

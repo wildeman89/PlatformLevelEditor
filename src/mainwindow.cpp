@@ -9,7 +9,6 @@
 
 #define BORDER 256
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
@@ -21,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(m_scene);
 
+    initTreeCategories();
     disableEditor();
 
     // load config files
@@ -33,6 +33,25 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::initTreeCategories()
+{
+    m_tree_level = new QTreeWidgetItem(ui->treeWidget);
+    m_tree_level->setText(0, "Level");
+    m_tree_level->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
+
+    m_tree_platforms = new QTreeWidgetItem(ui->treeWidget);
+    m_tree_platforms->setText(0, "Platforms");
+    m_tree_platforms->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
+
+    m_tree_enemies = new QTreeWidgetItem(ui->treeWidget);
+    m_tree_enemies->setText(0, "Enemies");
+    m_tree_enemies->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
+
+    m_tree_powerups = new QTreeWidgetItem(ui->treeWidget);
+    m_tree_powerups->setText(0, "Powerups");
+    m_tree_powerups->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
 }
 
 void MainWindow::loadConfigBackground()
