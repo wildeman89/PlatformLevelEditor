@@ -33,7 +33,7 @@ private:
     bool m_editing_enabled;
 
     // tree categories
-    QTreeWidgetItem *m_tree_level;
+    QTreeWidgetItem *m_tree_begin_end;
     QTreeWidgetItem *m_tree_platforms;
     QTreeWidgetItem *m_tree_enemies;
     QTreeWidgetItem *m_tree_powerups;

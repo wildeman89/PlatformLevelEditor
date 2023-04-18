@@ -1,0 +1,9 @@
+{
+    "objects": [
+        {
+            "name":"brick-block",
+            "path": ":/res/image/platform/brick.png",
+            "category": "platform"
+        }
+    ]
+}

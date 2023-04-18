@@ -37,9 +37,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::initTreeCategories()
 {
-    m_tree_level = new QTreeWidgetItem(ui->treeWidget);
-    m_tree_level->setText(0, "Level");
-    m_tree_level->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
+    m_tree_begin_end = new QTreeWidgetItem(ui->treeWidget);
+    m_tree_begin_end->setText(0, "Begin/End");
+    m_tree_begin_end->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
 
     m_tree_platforms = new QTreeWidgetItem(ui->treeWidget);
     m_tree_platforms->setText(0, "Platforms");
