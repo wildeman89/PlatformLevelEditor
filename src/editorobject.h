@@ -14,6 +14,11 @@ public:
     QRectF boundingRect() const;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+
+protected:
+
+    QVariant itemChange(GraphicsItemChange change,
+                            const QVariant &value);
 };
 
 #endif // EDITOROBJECT_H

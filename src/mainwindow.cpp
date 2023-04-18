@@ -211,7 +211,9 @@ void MainWindow::newLevelFormFinished(const QString &name,
 void MainWindow::itemDropped(const QString &name, const QPointF &pos)
 {
     EditorObject *obj = new EditorObject(name, m_pixmaps[name]);
-    obj->setPos(pos);
+    qreal xV = round(pos.x()/GRID_SIZE)*GRID_SIZE;
+    qreal yV = round(pos.y()/GRID_SIZE)*GRID_SIZE;
+    obj->setPos(QPointF(xV, yV));
     m_scene->addItem(obj);
 }
 
