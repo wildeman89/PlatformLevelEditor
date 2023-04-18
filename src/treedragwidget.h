@@ -7,6 +7,9 @@ class TreeDragWidget : public QTreeWidget
 {
 public:
     TreeDragWidget(QWidget *parent=nullptr);
+
+protected:
+
 };
 
 #endif // TREEDRAGWIDGET_H
