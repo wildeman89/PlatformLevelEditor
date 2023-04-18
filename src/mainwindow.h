@@ -1,12 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "editorscene.h"
+
 #include <vector>
 #include <unordered_map>
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QTreeWidget>
 #include <QFileIconProvider>
+
 
 
 QT_BEGIN_NAMESPACE
@@ -24,7 +27,7 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    QGraphicsScene *m_scene;
+    EditorScene *m_scene;
 
     QString m_level_name;
     QSizeF m_level_size;
@@ -43,10 +46,10 @@ private:
     QFileIconProvider m_icon_provider;
 
     // pixmaps
-    std::unordered_map<QString, QPixmap *> pixmaps;
+    std::unordered_map<QString, QPixmap *> m_pixmaps;
 
     // object categories
-    std::unordered_map<QString, std::string> categories;
+    std::unordered_map<QString, std::string> m_categories;
 
     void initTreeCategories();
     void loadConfigBackground();

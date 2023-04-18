@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    m_scene = new QGraphicsScene(this);
+    m_scene = new EditorScene(this);
     ui->graphicsView->setScene(m_scene);
 
     initTreeCategories();
@@ -147,8 +147,8 @@ void MainWindow::loadConfigObjects()
         item->setText(0, name);
         item->setIcon(0, QIcon(path));
 
-        pixmaps[name] = new QPixmap(path);
-        categories[name] = category.toStdString();
+        m_pixmaps[name] = new QPixmap(path);
+        m_categories[name] = category.toStdString();
     }
 }
 
@@ -210,7 +210,7 @@ void MainWindow::newLevelFormFinished(const QString &name,
 
 void MainWindow::itemDropped(const QString &name, const QPointF &pos)
 {
-    EditorObject *obj = new EditorObject(name, pixmaps[name]);
+    EditorObject *obj = new EditorObject(name, m_pixmaps[name]);
     obj->setPos(pos);
     m_scene->addItem(obj);
 }
