@@ -43,7 +43,7 @@ private:
 
     // tree categories
     QTreeWidgetItem *m_tree_begin_end;
-    QTreeWidgetItem *m_tree_platforms;
+    QTreeWidgetItem *m_tree_tiles;
     QTreeWidgetItem *m_tree_enemies;
     QTreeWidgetItem *m_tree_powerups;
 

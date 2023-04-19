@@ -3,7 +3,7 @@
 
 #include <QGraphicsScene>
 
-#define GRID_SIZE 16
+#define GRID_SIZE 10
 
 class EditorScene : public QGraphicsScene
 {

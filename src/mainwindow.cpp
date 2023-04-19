@@ -10,7 +10,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#define BORDER 128
+#define BORDER 100
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -206,9 +206,9 @@ void MainWindow::initTreeCategories()
     m_tree_begin_end->setText(0, "Begin/End");
     m_tree_begin_end->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
 
-    m_tree_platforms = new QTreeWidgetItem(ui->treeWidget);
-    m_tree_platforms->setText(0, "Platforms");
-    m_tree_platforms->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
+    m_tree_tiles = new QTreeWidgetItem(ui->treeWidget);
+    m_tree_tiles->setText(0, "Tiles");
+    m_tree_tiles->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
 
     m_tree_enemies = new QTreeWidgetItem(ui->treeWidget);
     m_tree_enemies->setText(0, "Enemies");
@@ -292,8 +292,8 @@ void MainWindow::loadConfigObjects()
 
         QTreeWidgetItem *parent;
 
-        if(category == "platform") {
-            parent = m_tree_platforms;
+        if(category == "tile") {
+            parent = m_tree_tiles;
         } else if(category == "enemy") {
             parent = m_tree_enemies;
         } else if(category == "powerup") {
