@@ -1,10 +1,12 @@
 #ifndef EDITOROBJECT_H
 #define EDITOROBJECT_H
 
-#include <QGraphicsItem>
+#include <QGraphicsObject>
 
-class EditorObject : public QGraphicsItem
+class EditorObject : public QGraphicsObject
 {
+    Q_OBJECT
+
     QString m_label;
     QPixmap *m_pixmap;
 
@@ -23,6 +25,10 @@ protected:
                             const QVariant &value);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+signals:
+
+    void deleteObject(QGraphicsObject *obj);
 };
 
 #endif // EDITOROBJECT_H

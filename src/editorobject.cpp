@@ -60,6 +60,6 @@ QVariant EditorObject::itemChange(GraphicsItemChange change, const QVariant &val
 void EditorObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::RightButton) {
-        scene()->removeItem(this);
+        emit deleteObject(this);
     }
 }

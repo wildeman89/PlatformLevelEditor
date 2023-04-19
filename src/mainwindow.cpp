@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonArray>
+#include <QFileDialog>
 
 #define BORDER 256
 
@@ -29,8 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     loadConfigObjects();
 
     connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveSelected);
+    connect(ui->actionSave_As, &QAction::triggered, this, &MainWindow::saveAsSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
-
     connect(ui->graphicsView, &EditorView::itemDropped, this, &MainWindow::itemDropped);
 }
 
@@ -48,25 +50,26 @@ void MainWindow::writeLevelFile(const QString &path)
     }
 
     QJsonArray obj_arr;
-    for(auto item : m_scene->items()) {
-
-        EditorObject *editor_obj = qgraphicsitem_cast<EditorObject *>(item);
-        if(!editor_obj) {
-            continue;
-        }
+    for(auto object : m_objects) {
 
         QJsonObject json_object;
-        json_object["label"] = editor_obj->label();
-        json_object["x"] = editor_obj->pos().x();
-        json_object["y"] = editor_obj->pos().y();
+        json_object["label"] = object->label();
+        json_object["x"] = object->pos().x();
+        json_object["y"] = object->pos().y();
 
         obj_arr.append(json_object);
     }
 
     QJsonObject root_obj;
+    root_obj["name"] = m_level_name;
+    root_obj["width"] = m_level_size.width();
+    root_obj["height"] = m_level_size.height();
+    root_obj["background"] = m_level_background;
     root_obj["objects"] = obj_arr;
 
-    file.write(QJsonDocument(root_obj).toJson());
+    QByteArray data = QJsonDocument(root_obj).toJson();
+
+    file.write(data);
     file.close();
 }
 
@@ -219,6 +222,22 @@ void MainWindow::newLevelSelected()
     form->show();
 }
 
+void MainWindow::saveSelected()
+{
+    if(m_file_save_path.isEmpty()) {
+        saveAsSelected();
+    } else {
+        writeLevelFile(m_file_save_path);
+    }
+}
+
+void MainWindow::saveAsSelected()
+{
+    m_file_save_path = QFileDialog::getSaveFileName(this, tr("Save File"),".",
+                               tr("Platform Level Editor Files (*.ple)"));
+    writeLevelFile(m_file_save_path);
+}
+
 void MainWindow::newLevelFormFinished(const QString &name,
                                       const QSizeF &size,
                                       const QString &background)
@@ -251,6 +270,14 @@ void MainWindow::itemDropped(const QString &name, const QPointF &pos)
     qreal yV = round(pos.y()/GRID_SIZE)*GRID_SIZE;
     obj->setPos(QPointF(xV, yV));
     m_scene->addItem(obj);
+    m_objects.push_back(obj);
+    connect(obj, &EditorObject::deleteObject, this, &MainWindow::deleteObject);
     m_scene->clearSelection();
+}
+
+void MainWindow::deleteObject(QGraphicsObject *obj)
+{
+    m_scene->removeItem(obj);
+    m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), obj), m_objects.end());
 }
 

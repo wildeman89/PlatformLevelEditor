@@ -55,6 +55,11 @@ private:
     // object categories
     std::unordered_map<QString, std::string> m_categories;
 
+    // objects
+    std::vector<EditorObject *> m_objects;
+
+    QString m_file_save_path;
+
     void initTreeCategories();
     void loadConfigBackground();
     void loadConfigObjects();
@@ -69,11 +74,17 @@ public slots:
 
     void quitSelected();
     void newLevelSelected();
+    void saveSelected();
+    void saveAsSelected();
+
+
     void newLevelFormFinished(const QString &name,
                               const QSizeF &size,
                               const QString &background);
 
     void itemDropped(const QString &name, const QPointF &pos);
+
+    void deleteObject(QGraphicsObject *obj);
 
 };
 #endif // MAINWINDOW_H
