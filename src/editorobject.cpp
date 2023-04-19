@@ -7,6 +7,11 @@
 
 #define GRID_SIZE 16
 
+QString EditorObject::label() const
+{
+    return m_label;
+}
+
 EditorObject::EditorObject(const QString &label, QPixmap *pixmap)
     : m_label(label), m_pixmap(pixmap)
 {

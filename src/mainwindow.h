@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "editorscene.h"
+#include "editorobject.h"
 
 #include <vector>
 #include <unordered_map>
@@ -23,6 +24,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void writeLevelFile(const QString &path);
+    bool readLevelFile(const QString &path);
 
 private:
     Ui::MainWindow *ui;
@@ -70,8 +74,6 @@ public slots:
                               const QString &background);
 
     void itemDropped(const QString &name, const QPointF &pos);
-
-
 
 };
 #endif // MAINWINDOW_H

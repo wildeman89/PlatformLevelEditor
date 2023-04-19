@@ -1,11 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "newlevelform.h"
-#include "editorobject.h"
 
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonArray>
 
 #define BORDER 256
@@ -37,6 +37,42 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::writeLevelFile(const QString &path)
+{
+    QFile file(path);
+    if(!file.open(QFile::WriteOnly)) {
+        qDebug() << "error opening file";
+        return;
+    }
+
+    QJsonArray obj_arr;
+    for(auto item : m_scene->items()) {
+
+        EditorObject *editor_obj = qgraphicsitem_cast<EditorObject *>(item);
+        if(!editor_obj) {
+            continue;
+        }
+
+        QJsonObject json_object;
+        json_object["label"] = editor_obj->label();
+        json_object["x"] = editor_obj->pos().x();
+        json_object["y"] = editor_obj->pos().y();
+
+        obj_arr.append(json_object);
+    }
+
+    QJsonObject root_obj;
+    root_obj["objects"] = obj_arr;
+
+    file.write(QJsonDocument(root_obj).toJson());
+    file.close();
+}
+
+bool MainWindow::readLevelFile(const QString &path)
+{
+
 }
 
 void MainWindow::initTreeCategories()
