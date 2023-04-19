@@ -8,8 +8,9 @@
 #include <QJsonArray>
 #include <QJsonArray>
 #include <QFileDialog>
+#include <QMessageBox>
 
-#define BORDER 256
+#define BORDER 128
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -32,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveSelected);
     connect(ui->actionSave_As, &QAction::triggered, this, &MainWindow::saveAsSelected);
+    connect(ui->actionLoad_Level, &QAction::triggered, this, &MainWindow::loadSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
     connect(ui->graphicsView, &EditorView::itemDropped, this, &MainWindow::itemDropped);
 }
@@ -75,7 +77,126 @@ void MainWindow::writeLevelFile(const QString &path)
 
 bool MainWindow::readLevelFile(const QString &path)
 {
+    QFile file(path);
+    if(!file.open(QFile::ReadOnly)) {
+        qDebug() << "error opening file";
+        return false;
+    }
 
+    QByteArray data = file.readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject root_obj = doc.object();
+
+    if(!root_obj.contains("name")) {
+        qDebug() << "readLevelFile - missing level name";
+        return false;
+    }
+    if(!root_obj["name"].isString()) {
+        qDebug() << "readLevelFile - name must be a string";
+        return false;
+    }
+
+    if(!root_obj.contains("background")) {
+        qDebug() << "readLevelFile - missing level background";
+        return false;
+    }
+    if(!root_obj["background"].isString()) {
+        qDebug() << "readLevelFile - background must be a string";
+        return false;
+    }
+
+    if(!root_obj.contains("width")) {
+        qDebug() << "readLevelFile - missing level width";
+        return false;
+    }
+    if(!root_obj["width"].isDouble()) {
+        qDebug() << "readLevelFile - width must be a number";
+        return false;
+    }
+
+    if(!root_obj.contains("height")) {
+        qDebug() << "readLevelFile - missing level height";
+        return false;
+    }
+    if(!root_obj["height"].isDouble()) {
+        qDebug() << "readLevelFile - height must be a number";
+        return false;
+    }
+
+    if(!root_obj.contains("objects")) {
+        qDebug() << "readLevelFile - missing level objects";
+        return false;
+    }
+    if(!root_obj["objects"].isArray()) {
+        qDebug() << "readLevelFile - height must be an array";
+        return false;
+    }
+
+    QJsonArray array = root_obj["objects"].toArray();
+
+    for(QJsonValueRef val : array) {
+
+        if(!val.isObject()) {
+            qDebug() << "readLevelFile - objects array must contain objects";
+            clearLevel();
+            return false;
+        }
+
+        QJsonObject obj = val.toObject();
+
+        if(!obj.contains("label")) {
+            qDebug() << "readLevelFile - missing object label";
+            clearLevel();
+            return false;
+        }
+        if(!obj["label"].isString()) {
+            qDebug() << "readLevelFile - object label must be a string";
+            clearLevel();
+            return false;
+        }
+
+        if(!obj.contains("x")) {
+            qDebug() << "readLevelFile - missing level width";
+            clearLevel();
+            return false;
+        }
+        if(!obj["x"].isDouble()) {
+            qDebug() << "readLevelFile - x must be a number";
+            clearLevel();
+            return false;
+        }
+
+        if(!obj.contains("y")) {
+            qDebug() << "readLevelFile - missing level height";
+            clearLevel();
+            return false;
+        }
+        if(!obj["y"].isDouble()) {
+            qDebug() << "readLevelFile - y must be a number";
+            clearLevel();
+            return false;
+        }
+
+        QString label = obj["label"].toString();
+        QPointF pos(obj["x"].toDouble(), obj["y"].toDouble());
+
+        itemDropped(label, pos);
+    }
+
+    newLevelFormFinished(root_obj["name"].toString(),
+                         QSizeF(root_obj["width"].toDouble(), root_obj["height"].toDouble()),
+                         root_obj["background"].toString());
+
+    return true;
+
+}
+
+void MainWindow::clearLevel()
+{
+    m_scene->clear();
+    m_objects.clear();
+    m_file_save_path.clear();
+    disableEditor();
 }
 
 void MainWindow::initTreeCategories()
@@ -210,6 +331,19 @@ bool MainWindow::isEditing()
     return m_editing_enabled;
 }
 
+void MainWindow::askIfSave()
+{
+    if(isEditing()) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(this, "Save", "Would you like to save " + m_level_name + "?",
+                                    QMessageBox::Yes|QMessageBox::No);
+
+        if (reply == QMessageBox::Yes) {
+            saveSelected();
+        }
+    }
+}
+
 void MainWindow::quitSelected()
 {
     QApplication::quit();
@@ -217,6 +351,11 @@ void MainWindow::quitSelected()
 
 void MainWindow::newLevelSelected()
 {
+    if(isEditing()) {
+        askIfSave();
+    }
+    clearLevel();
+
     NewLevelForm *form = new NewLevelForm(m_backgrounds);
     connect(form, &NewLevelForm::finished, this, &MainWindow::newLevelFormFinished);
     form->show();
@@ -224,6 +363,10 @@ void MainWindow::newLevelSelected()
 
 void MainWindow::saveSelected()
 {
+    if(!isEditing()) {
+        return;
+    }
+
     if(m_file_save_path.isEmpty()) {
         saveAsSelected();
     } else {
@@ -233,23 +376,34 @@ void MainWindow::saveSelected()
 
 void MainWindow::saveAsSelected()
 {
+    if(!isEditing()) {
+        return;
+    }
+
     m_file_save_path = QFileDialog::getSaveFileName(this, tr("Save File"),".",
                                tr("Platform Level Editor Files (*.ple)"));
     writeLevelFile(m_file_save_path);
+}
+
+void MainWindow::loadSelected()
+{
+    if(isEditing()) {
+        askIfSave();
+    }
+    clearLevel();
+
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open File"), ".", tr("Platform Level Editor Files (*.ple)"));
+    if(readLevelFile(fileName)) {
+        enableEditor();
+        m_file_save_path = fileName;
+    }
 }
 
 void MainWindow::newLevelFormFinished(const QString &name,
                                       const QSizeF &size,
                                       const QString &background)
 {
-    if(isEditing()) {
-
-        // ask if they want to save
-        // before opening another level
-
-        m_scene->clear();
-    }
-
     m_level_name = name;
     m_level_size = size;
     m_level_background = background;

@@ -27,6 +27,7 @@ public:
 
     void writeLevelFile(const QString &path);
     bool readLevelFile(const QString &path);
+    void clearLevel();
 
 private:
     Ui::MainWindow *ui;
@@ -67,6 +68,7 @@ private:
     void disableEditor();
     void enableEditor();
     bool isEditing();
+    void askIfSave();
 
 signals:
 
@@ -76,6 +78,7 @@ public slots:
     void newLevelSelected();
     void saveSelected();
     void saveAsSelected();
+    void loadSelected();
 
 
     void newLevelFormFinished(const QString &name,
