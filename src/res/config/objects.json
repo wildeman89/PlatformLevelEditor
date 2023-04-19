@@ -1,8 +1,18 @@
 {
     "objects": [
         {
-            "name":"brick_170x170",
-            "path": ":/res/image/platform/brick.png",
+            "name":"marble64x64",
+            "path": ":/res/image/platform/marble64x64.png",
+            "category": "platform"
+        },
+        {
+            "name":"marble256x64",
+            "path": ":/res/image/platform/marble256x64.png",
+            "category": "platform"
+        },
+        {
+            "name":"marble64x256",
+            "path": ":/res/image/platform/marble64x256.png",
             "category": "platform"
         }
     ]

@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/image/platform/brick.png</file>
+        <file>res/image/platform/marble256x64.png</file>
+        <file>res/image/platform/marble64x256.png</file>
+        <file>res/image/platform/marble64x64.png</file>
     </qresource>
 </RCC>
