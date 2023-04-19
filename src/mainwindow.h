@@ -79,7 +79,7 @@ public slots:
     void saveSelected();
     void saveAsSelected();
     void loadSelected();
-
+    void closeSelected();
 
     void newLevelFormFinished(const QString &name,
                               const QSizeF &size,

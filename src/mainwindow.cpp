@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveSelected);
     connect(ui->actionSave_As, &QAction::triggered, this, &MainWindow::saveAsSelected);
     connect(ui->actionLoad_Level, &QAction::triggered, this, &MainWindow::loadSelected);
+    connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
     connect(ui->graphicsView, &EditorView::itemDropped, this, &MainWindow::itemDropped);
 }
@@ -398,6 +399,16 @@ void MainWindow::loadSelected()
         enableEditor();
         m_file_save_path = fileName;
     }
+}
+
+void MainWindow::closeSelected()
+{
+    if(!isEditing()) {
+        return;
+    }
+
+    askIfSave();
+    clearLevel();
 }
 
 void MainWindow::newLevelFormFinished(const QString &name,
