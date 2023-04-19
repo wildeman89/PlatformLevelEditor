@@ -430,6 +430,10 @@ void MainWindow::newLevelFormFinished(const QString &name,
 
 void MainWindow::itemDropped(const QString &name, const QPointF &pos)
 {
+    if (auto search = m_pixmaps.find(name); search == m_pixmaps.end()) {
+        return;
+    }
+
     EditorObject *obj = new EditorObject(name, m_pixmaps[name]);
     qreal xV = round(pos.x()/GRID_SIZE)*GRID_SIZE;
     qreal yV = round(pos.y()/GRID_SIZE)*GRID_SIZE;

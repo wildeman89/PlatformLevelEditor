@@ -9,3 +9,4 @@ TreeDragWidget::TreeDragWidget(QWidget *parent)
     setDragEnabled(true);
 }
 
+
