@@ -40,7 +40,6 @@ private:
 
     std::vector<QString> m_backgrounds;
     bool m_editing_enabled;
-    bool m_is_clean;
 
     // tree categories
     QTreeWidgetItem *m_tree_begin_end;
@@ -57,9 +56,6 @@ private:
     // object categories
     std::unordered_map<QString, std::string> m_categories;
 
-    // objects
-    //std::vector<EditorObject *> m_objects;
-
     QString m_file_save_path;
 
     void initTreeCategories();
@@ -69,6 +65,7 @@ private:
     void disableEditor();
     void enableEditor();
     bool isEditing();
+    bool isDirty();
     void askIfSave();
 
 signals:
@@ -82,9 +79,9 @@ public slots:
     void loadSelected();
     void closeSelected();
 
-    void newLevelFormFinished(const QString &name,
-                              const QSizeF &size,
-                              const QString &background);
+    void createLevel(const QString &name,
+                     const QSizeF &size,
+                     const QString &background);
 
     void addItem(const QString &name, const QPointF &pos);
 

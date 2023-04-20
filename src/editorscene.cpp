@@ -39,7 +39,7 @@ void EditorScene::keyPressEvent(QKeyEvent *event)
         } else if(event->matches(QKeySequence::Paste)) {
 
         } else if(event->matches(QKeySequence::Save)) {
-
+            emit saveRequested();
         } else if(event->matches(QKeySequence::Delete)) {
             deleteSelectedItems();
         } else if(event->key() == Qt::Key_G && event->modifiers()==Qt::ControlModifier) {

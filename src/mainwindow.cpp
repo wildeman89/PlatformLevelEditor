@@ -16,8 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_scene(nullptr),
-      m_editing_enabled(true),
-      m_is_clean(true)
+      m_editing_enabled(true)
 {
     ui->setupUi(this);
 
@@ -38,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
     connect(ui->graphicsView, &EditorView::itemDropped, this, &MainWindow::addItem);
+    connect(m_scene, &EditorScene::saveRequested, this, &MainWindow::saveSelected);
 }
 
 MainWindow::~MainWindow()
@@ -57,6 +57,10 @@ void MainWindow::writeLevelFile(const QString &path)
     for(auto it : m_scene->items()) {
 
         EditorObject *object = qgraphicsitem_cast<EditorObject *>(it);
+
+        // FIXME
+        // TODO - if an object is in an object group, its position is incorrect,
+        // because pos() is an offset from the parent group
 
         if(!object) {
             continue;
@@ -78,7 +82,6 @@ void MainWindow::writeLevelFile(const QString &path)
     root_obj["objects"] = obj_arr;
 
     QByteArray data = QJsonDocument(root_obj).toJson();
-
     file.write(data);
     file.close();
 }
@@ -191,9 +194,9 @@ bool MainWindow::readLevelFile(const QString &path)
         addItem(label, pos);
     }
 
-    newLevelFormFinished(root_obj["name"].toString(),
-                         QSizeF(root_obj["width"].toDouble(), root_obj["height"].toDouble()),
-                         root_obj["background"].toString());
+    createLevel(root_obj["name"].toString(),
+                QSizeF(root_obj["width"].toDouble(), root_obj["height"].toDouble()),
+                root_obj["background"].toString());
 
     return true;
 
@@ -364,7 +367,7 @@ void MainWindow::newLevelSelected()
     clearLevel();
 
     NewLevelForm *form = new NewLevelForm(m_backgrounds);
-    connect(form, &NewLevelForm::finished, this, &MainWindow::newLevelFormFinished);
+    connect(form, &NewLevelForm::finished, this, &MainWindow::createLevel);
     form->show();
 }
 
@@ -417,7 +420,7 @@ void MainWindow::closeSelected()
     clearLevel();
 }
 
-void MainWindow::newLevelFormFinished(const QString &name,
+void MainWindow::createLevel(const QString &name,
                                       const QSizeF &size,
                                       const QString &background)
 {

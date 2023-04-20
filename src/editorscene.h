@@ -23,6 +23,10 @@ public slots:
     void groupSelectedItems();
     void ungroupSelectedItems();
 
+signals:
+
+    void saveRequested();
+
 };
 
 #endif // EDITORSCENE_H
