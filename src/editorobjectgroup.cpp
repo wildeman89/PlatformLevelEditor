@@ -19,6 +19,11 @@ int EditorObjectGroup::type() const
     return Type;
 }
 
+QRectF EditorObjectGroup::boundingRect() const
+{
+    return childrenBoundingRect();
+}
+
 void EditorObjectGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option)

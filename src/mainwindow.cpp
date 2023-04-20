@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "newlevelform.h"
+#include "editorobject.h"
+#include "editorobjectgroup.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -53,15 +55,21 @@ void MainWindow::writeLevelFile(const QString &path)
         return;
     }
 
+    // all objects ungrouped on save
+    for(auto it : m_scene->items()) {
+        EditorObjectGroup *group = qgraphicsitem_cast<EditorObjectGroup*>(it);
+        if(group) {
+            for(auto g : group->childItems()) {
+                group->removeFromGroup(g);
+            }
+            m_scene->destroyItemGroup(group);
+        }
+    }
+
     QJsonArray obj_arr;
     for(auto it : m_scene->items()) {
 
         EditorObject *object = qgraphicsitem_cast<EditorObject *>(it);
-
-        // FIXME
-        // TODO - if an object is in an object group, its position is incorrect,
-        // because pos() is an offset from the parent group
-
         if(!object) {
             continue;
         }
