@@ -10,7 +10,6 @@ CONFIG += c++17
 
 SOURCES += \
     editorobject.cpp \
-    editorobjectgroup.cpp \
     editorscene.cpp \
     editorview.cpp \
     main.cpp \
@@ -20,7 +19,6 @@ SOURCES += \
 
 HEADERS += \
     editorobject.h \
-    editorobjectgroup.h \
     editorscene.h \
     editorview.h \
     mainwindow.h \

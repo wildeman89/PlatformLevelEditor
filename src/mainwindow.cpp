@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "newlevelform.h"
 #include "editorobject.h"
-#include "editorobjectgroup.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -53,17 +52,6 @@ void MainWindow::writeLevelFile(const QString &path)
     if(!file.open(QFile::WriteOnly)) {
         qDebug() << "error opening file";
         return;
-    }
-
-    // all objects ungrouped on save
-    for(auto it : m_scene->items()) {
-        EditorObjectGroup *group = qgraphicsitem_cast<EditorObjectGroup*>(it);
-        if(group) {
-            for(auto g : group->childItems()) {
-                group->removeFromGroup(g);
-            }
-            m_scene->destroyItemGroup(group);
-        }
     }
 
     QJsonArray obj_arr;

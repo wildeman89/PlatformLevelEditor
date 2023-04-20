@@ -20,8 +20,6 @@ protected:
 public slots:
 
     void deleteSelectedItems();
-    void groupSelectedItems();
-    void ungroupSelectedItems();
 
 signals:
 

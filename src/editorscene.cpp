@@ -1,5 +1,4 @@
 #include "editorscene.h"
-#include "editorobjectgroup.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -42,10 +41,6 @@ void EditorScene::keyPressEvent(QKeyEvent *event)
             emit saveRequested();
         } else if(event->matches(QKeySequence::Delete)) {
             deleteSelectedItems();
-        } else if(event->key() == Qt::Key_G && event->modifiers()==Qt::ControlModifier) {
-            groupSelectedItems();
-        } else if(event->key() == Qt::Key_U && event->modifiers()==Qt::ControlModifier) {
-            ungroupSelectedItems();
         }
     }
 
@@ -58,36 +53,4 @@ void EditorScene::deleteSelectedItems()
     for(auto s : sel) {
         removeItem(s);
     }
-}
-
-void EditorScene::groupSelectedItems()
-{
-    auto sel = selectedItems();
-    if(sel.size() > 1) {
-        EditorObjectGroup *group = new EditorObjectGroup();
-        for(auto s : sel) {
-            group->addToGroup(s);
-        }
-        addItem(group);
-        clearSelection();
-        group->setSelected(true);
-        update();
-    }
-}
-
-void EditorScene::ungroupSelectedItems()
-{
-    auto sel = selectedItems();
-    for(auto s : sel) {
-        EditorObjectGroup *group = qgraphicsitem_cast<EditorObjectGroup *>(s);
-        if(!group) {
-            continue;
-        }
-        for(auto g : group->childItems()) {
-            group->removeFromGroup(g);
-            g->setSelected(true);
-        }
-        destroyItemGroup(group);
-    }
-    update();
 }
