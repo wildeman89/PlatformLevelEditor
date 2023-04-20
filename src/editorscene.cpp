@@ -38,6 +38,11 @@ void EditorScene::keyPressEvent(QKeyEvent *event)
 
         } else if(event->matches(QKeySequence::Save)) {
 
+        } else if(event->matches(QKeySequence::Delete)) {
+            auto sel = selectedItems();
+            for(auto s : sel) {
+                removeItem(s);
+            }
         }
     }
 

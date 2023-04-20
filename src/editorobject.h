@@ -1,16 +1,16 @@
 #ifndef EDITOROBJECT_H
 #define EDITOROBJECT_H
 
-#include <QGraphicsObject>
+#include <QGraphicsItem>
 
-class EditorObject : public QGraphicsObject
+class EditorObject : public QGraphicsItem
 {
-    Q_OBJECT
-
     QString m_label;
     QPixmap *m_pixmap;
 
 public:
+    enum { Type = UserType + 1 };
+
     EditorObject(const QString &label, QPixmap *pixmap);
 
     QRectF boundingRect() const;
@@ -19,16 +19,13 @@ public:
 
     QString label() const;
 
+    int type() const;
+
 protected:
 
     QVariant itemChange(GraphicsItemChange change,
                             const QVariant &value);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
-signals:
-
-    void deleteObject(QGraphicsObject *obj);
 };
 
 #endif // EDITOROBJECT_H

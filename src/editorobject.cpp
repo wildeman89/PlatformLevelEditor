@@ -12,6 +12,11 @@ QString EditorObject::label() const
     return m_label;
 }
 
+int EditorObject::type() const
+{
+    return Type;
+}
+
 EditorObject::EditorObject(const QString &label, QPixmap *pixmap)
     : m_label(label), m_pixmap(pixmap)
 {
@@ -54,12 +59,5 @@ QVariant EditorObject::itemChange(GraphicsItemChange change, const QVariant &val
     }
     else {
         return QGraphicsItem::itemChange(change, value);
-    }
-}
-
-void EditorObject::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if(event->button() == Qt::RightButton) {
-        emit deleteObject(this);
     }
 }

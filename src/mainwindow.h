@@ -40,6 +40,7 @@ private:
 
     std::vector<QString> m_backgrounds;
     bool m_editing_enabled;
+    bool m_is_clean;
 
     // tree categories
     QTreeWidgetItem *m_tree_begin_end;
@@ -57,7 +58,7 @@ private:
     std::unordered_map<QString, std::string> m_categories;
 
     // objects
-    std::vector<EditorObject *> m_objects;
+    //std::vector<EditorObject *> m_objects;
 
     QString m_file_save_path;
 
@@ -86,8 +87,6 @@ public slots:
                               const QString &background);
 
     void itemDropped(const QString &name, const QPointF &pos);
-
-    void deleteObject(QGraphicsObject *obj);
 
 };
 #endif // MAINWINDOW_H

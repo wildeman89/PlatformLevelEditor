@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
       m_scene(nullptr),
-      m_editing_enabled(true)
+      m_editing_enabled(true),
+      m_is_clean(true)
 {
     ui->setupUi(this);
 
@@ -53,7 +54,13 @@ void MainWindow::writeLevelFile(const QString &path)
     }
 
     QJsonArray obj_arr;
-    for(auto object : m_objects) {
+    for(auto it : m_scene->items()) {
+
+        EditorObject *object = qgraphicsitem_cast<EditorObject *>(it);
+
+        if(!object) {
+            continue;
+        }
 
         QJsonObject json_object;
         json_object["label"] = object->label();
@@ -195,7 +202,6 @@ bool MainWindow::readLevelFile(const QString &path)
 void MainWindow::clearLevel()
 {
     m_scene->clear();
-    m_objects.clear();
     m_file_save_path.clear();
     disableEditor();
 }
@@ -439,14 +445,6 @@ void MainWindow::itemDropped(const QString &name, const QPointF &pos)
     qreal yV = round(pos.y()/GRID_SIZE)*GRID_SIZE;
     obj->setPos(QPointF(xV, yV));
     m_scene->addItem(obj);
-    m_objects.push_back(obj);
-    connect(obj, &EditorObject::deleteObject, this, &MainWindow::deleteObject);
     m_scene->clearSelection();
-}
-
-void MainWindow::deleteObject(QGraphicsObject *obj)
-{
-    m_scene->removeItem(obj);
-    m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), obj), m_objects.end());
 }
 
