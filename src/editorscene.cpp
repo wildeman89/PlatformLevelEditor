@@ -1,4 +1,5 @@
 #include "editorscene.h"
+#include "editorobjectgroup.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -31,7 +32,6 @@ void EditorScene::keyPressEvent(QKeyEvent *event)
 
     if(event->type() == QKeyEvent::KeyPress) {
         if(event->matches(QKeySequence::Copy)) {
-
         } else if(event->matches(QKeySequence::Cut)) {
 
         } else if(event->matches(QKeySequence::Paste)) {
@@ -39,10 +39,51 @@ void EditorScene::keyPressEvent(QKeyEvent *event)
         } else if(event->matches(QKeySequence::Save)) {
 
         } else if(event->matches(QKeySequence::Delete)) {
+
+            // delete all selected items
             auto sel = selectedItems();
             for(auto s : sel) {
                 removeItem(s);
             }
+
+        } else if(event->key() == Qt::Key_G && event->modifiers()==Qt::ControlModifier) {
+
+            // group selected items if there are more than 1
+            auto sel = selectedItems();
+            if(sel.size() > 1) {
+                EditorObjectGroup *group = new EditorObjectGroup();
+                for(auto s : sel) {
+                    group->addToGroup(s);
+                }
+                addItem(group);
+                clearSelection();
+                group->setSelected(true);
+                update();
+            }
+
+
+
+        } else if(event->key() == Qt::Key_U && event->modifiers()==Qt::ControlModifier) {
+
+            // ungroup selected items if they are groups
+
+            auto sel = selectedItems();
+            for(auto s : sel) {
+
+                EditorObjectGroup *group = qgraphicsitem_cast<EditorObjectGroup *>(s);
+                if(!group) {
+                    continue;
+                }
+
+                for(auto g : group->childItems()) {
+                    group->removeFromGroup(g);
+                    g->setSelected(true);
+                }
+
+                destroyItemGroup(group);
+            }
+
+            update();
         }
     }
 
