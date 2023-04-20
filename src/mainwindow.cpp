@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionLoad_Level, &QAction::triggered, this, &MainWindow::loadSelected);
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::closeSelected);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::quitSelected);
-    connect(ui->graphicsView, &EditorView::itemDropped, this, &MainWindow::itemDropped);
+    connect(ui->graphicsView, &EditorView::itemDropped, this, &MainWindow::addItem);
 }
 
 MainWindow::~MainWindow()
@@ -188,7 +188,7 @@ bool MainWindow::readLevelFile(const QString &path)
         QString label = obj["label"].toString();
         QPointF pos(obj["x"].toDouble(), obj["y"].toDouble());
 
-        itemDropped(label, pos);
+        addItem(label, pos);
     }
 
     newLevelFormFinished(root_obj["name"].toString(),
@@ -434,7 +434,7 @@ void MainWindow::newLevelFormFinished(const QString &name,
     enableEditor();
 }
 
-void MainWindow::itemDropped(const QString &name, const QPointF &pos)
+void MainWindow::addItem(const QString &name, const QPointF &pos)
 {
     if (auto search = m_pixmaps.find(name); search == m_pixmaps.end()) {
         return;

@@ -7,6 +7,7 @@
 
 class EditorScene : public QGraphicsScene
 {
+    Q_OBJECT
 public:
     explicit EditorScene(QObject *parent = nullptr);
 
@@ -16,7 +17,11 @@ protected:
 
     void keyPressEvent(QKeyEvent *event);
 
-    void keyReleaseEvent(QKeyEvent *event);
+public slots:
+
+    void deleteSelectedItems();
+    void groupSelectedItems();
+    void ungroupSelectedItems();
 
 };
 

@@ -86,7 +86,7 @@ public slots:
                               const QSizeF &size,
                               const QString &background);
 
-    void itemDropped(const QString &name, const QPointF &pos);
+    void addItem(const QString &name, const QPointF &pos);
 
 };
 #endif // MAINWINDOW_H
