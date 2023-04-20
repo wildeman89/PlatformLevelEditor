@@ -10,7 +10,14 @@ class EditorScene : public QGraphicsScene
 public:
     explicit EditorScene(QObject *parent = nullptr);
 
-    void drawBackground(QPainter *painter, const QRectF &rect) override;
+protected:
+
+    void drawBackground(QPainter *painter, const QRectF &rect);
+
+    void keyPressEvent(QKeyEvent *event);
+
+    void keyReleaseEvent(QKeyEvent *event);
+
 };
 
 #endif // EDITORSCENE_H

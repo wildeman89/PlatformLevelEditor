@@ -1,6 +1,8 @@
 #include "editorscene.h"
 
 #include <QPainter>
+#include <QDebug>
+#include <QKeyEvent>
 
 EditorScene::EditorScene(QObject *parent)
     : QGraphicsScene{parent}
@@ -22,4 +24,30 @@ void EditorScene::drawBackground(QPainter *painter, const QRectF &rect)
         }
     }
     painter->drawPoints(points.data(), points.size());
+}
+
+void EditorScene::keyPressEvent(QKeyEvent *event)
+{
+
+    if(event->type() == QKeyEvent::KeyPress) {
+        if(event->matches(QKeySequence::Copy)) {
+
+        } else if(event->matches(QKeySequence::Cut)) {
+
+        } else if(event->matches(QKeySequence::Paste)) {
+
+        } else if(event->matches(QKeySequence::Save)) {
+
+        }
+    }
+
+    QGraphicsScene::keyPressEvent(event);
+}
+
+void EditorScene::keyReleaseEvent(QKeyEvent *event)
+{
+
+
+
+    QGraphicsScene::keyReleaseEvent(event);
 }
