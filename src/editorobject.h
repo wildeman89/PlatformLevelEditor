@@ -21,6 +21,8 @@ public:
 
     int type() const;
 
+    QPixmap *pixmap() const;
+
 protected:
 
     QVariant itemChange(GraphicsItemChange change,

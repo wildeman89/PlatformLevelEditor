@@ -17,6 +17,11 @@ int EditorObject::type() const
     return Type;
 }
 
+QPixmap *EditorObject::pixmap() const
+{
+    return m_pixmap;
+}
+
 EditorObject::EditorObject(const QString &label, QPixmap *pixmap)
     : m_label(label), m_pixmap(pixmap)
 {

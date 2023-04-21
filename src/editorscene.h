@@ -8,6 +8,9 @@
 class EditorScene : public QGraphicsScene
 {
     Q_OBJECT
+
+    std::vector<QGraphicsItem *> m_copy_items;
+
 public:
     explicit EditorScene(QObject *parent = nullptr);
 
@@ -20,6 +23,8 @@ protected:
 public slots:
 
     void deleteSelectedItems();
+    void copySelectedItems();
+    void pasteSelectedItems();
 
 signals:
 
