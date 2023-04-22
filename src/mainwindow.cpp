@@ -224,8 +224,8 @@ void MainWindow::initTreeFromPath(const QString &path, QTreeWidgetItem *parent)
         while (files.hasNext()) {
 
             QString file_path = files.next();
-            auto fields = file_path.split("/");
-            QString fname = fields[fields.size() - 1];
+            auto fields = file_path.split(".");
+            QString fname = fields[0];
 
             QTreeWidgetItem *item = new QTreeWidgetItem(cat);
             item->setText(0, fname);
@@ -274,6 +274,13 @@ void MainWindow::askIfSave()
 
 void MainWindow::initTree()
 {
+    if(!QDir("res").exists()) {
+        QDir().mkdir("res");
+    }
+    if(!QDir("res/background").exists()) {
+        QDir().mkdir("res/background");
+    }
+
     QTreeWidgetItem *cat = new QTreeWidgetItem(ui->treeWidget);
     cat->setText(0, "res");
     cat->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
