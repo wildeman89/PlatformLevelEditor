@@ -446,4 +446,3 @@ void MainWindow::addItem(const QString &name, const QPointF &pos)
     m_scene->addItem(obj);
     m_scene->clearSelection();
 }
-

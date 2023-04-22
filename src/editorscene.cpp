@@ -7,6 +7,7 @@
 #include <QCursor>
 #include <QGraphicsView>
 #include <QGraphicsItemGroup>
+#include <QGraphicsSceneMouseEvent>
 
 EditorScene::EditorScene(QObject *parent)
     : QGraphicsScene{parent}
@@ -60,6 +61,7 @@ void EditorScene::deleteSelectedItems()
 
 void EditorScene::copySelectedItems()
 {
+    m_copy_items.clear();
     auto sel = selectedItems();
     for(auto s : sel) {
         m_copy_items.push_back(s);

@@ -7,8 +7,14 @@ class EditorView : public QGraphicsView
 {
     Q_OBJECT
 
+    QGraphicsRectItem *m_selection_rect;
+
+    bool m_is_selecting;
+    bool m_is_shift;
+
 public:
     EditorView(QWidget *parent = nullptr);
+    ~EditorView();
 
 protected:
 
@@ -17,6 +23,10 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
 
     void dropEvent(QDropEvent *event);
+
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
 signals:
 
