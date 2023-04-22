@@ -83,6 +83,7 @@ void EditorScene::pasteSelectedItems()
         }
     }
 
+    clearSelection();
     addItem(g);
 
     QPointF gpos = QPointF(g->boundingRect().x(),
@@ -99,5 +100,4 @@ void EditorScene::pasteSelectedItems()
     }
 
     destroyItemGroup(g);
-    m_copy_items.clear();
 }
