@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDirIterator>
 
 #define BORDER 100
 
@@ -24,12 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_scene = new EditorScene(this);
     ui->graphicsView->setScene(m_scene);
 
-    initTreeCategories();
+    initTree();
     disableEditor();
-
-    // load config files
-    loadConfigBackground();
-    loadConfigObjects();
 
     connect(ui->actionNew_Level, &QAction::triggered, this, &MainWindow::newLevelSelected);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveSelected);
@@ -205,116 +202,41 @@ void MainWindow::clearLevel()
     disableEditor();
 }
 
-void MainWindow::initTreeCategories()
-{
-    m_tree_begin_end = new QTreeWidgetItem(ui->treeWidget);
-    m_tree_begin_end->setText(0, "Begin/End");
-    m_tree_begin_end->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
-
-    m_tree_tiles = new QTreeWidgetItem(ui->treeWidget);
-    m_tree_tiles->setText(0, "Tiles");
-    m_tree_tiles->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
-
-    m_tree_enemies = new QTreeWidgetItem(ui->treeWidget);
-    m_tree_enemies->setText(0, "Enemies");
-    m_tree_enemies->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
-
-    m_tree_powerups = new QTreeWidgetItem(ui->treeWidget);
-    m_tree_powerups->setText(0, "Powerups");
-    m_tree_powerups->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
-}
-
 void MainWindow::loadConfigBackground()
 {
-    QFile file(":/res/config/backgrounds.json");
-    if(!file.open(QFile::ReadOnly)) {
-        throw std::invalid_argument("missing resource: /res/config/backgrounds.json");
-    }
-
-    QByteArray data = file.readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QJsonObject obj = doc.object();
-
-    if(!obj.contains("backgrounds")) {
-        throw std::invalid_argument("json error: /res/config/backgrounds.json - missing field: backgrounds");
-    }
-
-    if(!obj["backgrounds"].isArray()) {
-        throw std::invalid_argument("json error: /res/config/backgrounds.json - field: backgrounds must be array");
-    }
-
-    QJsonArray array = obj["backgrounds"].toArray();
-
-    for(const QJsonValue &val : array) {
-        if(!val.isString()) {
-            throw std::invalid_argument("json error: /res/config/backgrounds.json - field: backgrounds must contain strings");
-        }
-        m_backgrounds.push_back(val.toString());
-    }
 }
 
-void MainWindow::loadConfigObjects()
+void MainWindow::initTreeFromPath(const QString &path, QTreeWidgetItem *parent)
 {
-    QFile file(":/res/config/objects.json");
-    if(!file.open(QFile::ReadOnly)) {
-        throw std::invalid_argument("missing resource: /res/config/objects.json");
-    }
+    QDirIterator dirs(path, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+    while (dirs.hasNext()) {
+        QString dir_name = dirs.next();
 
-    QByteArray data = file.readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QJsonObject root_obj = doc.object();
+        QTreeWidgetItem *cat = new QTreeWidgetItem(parent);
+        cat->setText(0, dir_name);
+        cat->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
 
-    if(!root_obj.contains("objects")) {
-        throw std::invalid_argument("json error: /res/config/objects.json - missing field: objects");
-    }
+        QDir dir(dir_name);
+        dir.setSorting(QDir::SortFlag::Name);
+        dir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+        QDirIterator files(dir, QDirIterator::Subdirectories);
 
-    if(!root_obj["objects"].isArray()) {
-        throw std::invalid_argument("json error: /res/config/objects.json - field: objects must be array");
-    }
+        while (files.hasNext()) {
 
-    QJsonArray array = root_obj["objects"].toArray();
+            QString file_path = files.next();
+            auto fields = file_path.split("/");
+            QString fname = fields[fields.size() - 1];
 
-    for(const QJsonValue &val : array) {
+            QTreeWidgetItem *item = new QTreeWidgetItem(cat);
+            item->setText(0, fname);
+            item->setIcon(0, QIcon(file_path));
 
-        if(!val.isObject()) {
-            throw std::invalid_argument("json error: /res/config/objects.json - field: objects must contain type: objects");
-        }
-        QJsonObject obj = val.toObject();
-
-        if(!obj.contains("name")) {
-            throw std::invalid_argument("json error: /res/config/objects.json - type: object missing field: name");
-        }
-        if(!obj.contains("path")) {
-            throw std::invalid_argument("json error: /res/config/objects.json - type: object missing field: path");
-        }
-        if(!obj.contains("category")) {
-            throw std::invalid_argument("json error: /res/config/objects.json - type: object missing field: category");
+            QPixmap *px = new QPixmap(file_path);
+            m_pixmaps[fname] = px;
         }
 
-        QString name = obj["name"].toString();
-        QString path = obj["path"].toString();
-        QString category = obj["category"].toString();
-
-        QTreeWidgetItem *parent;
-
-        if(category == "tile") {
-            parent = m_tree_tiles;
-        } else if(category == "enemy") {
-            parent = m_tree_enemies;
-        } else if(category == "powerup") {
-            parent = m_tree_powerups;
-        } else if(category == "begin-end") {
-            parent = m_tree_begin_end;
-        } else {
-            throw std::invalid_argument("json error: /res/config/objects.json - bad category: " + category.toStdString());
-        }
-
-        QTreeWidgetItem *item = new QTreeWidgetItem(parent);
-        item->setText(0, name);
-        item->setIcon(0, QIcon(path));
-
-        m_pixmaps[name] = new QPixmap(path);
-        m_categories[name] = category.toStdString();
+        cat->sortChildren(0, Qt::SortOrder::AscendingOrder);
+        initTreeFromPath(dir_name, cat);
     }
 }
 
@@ -348,6 +270,14 @@ void MainWindow::askIfSave()
             saveSelected();
         }
     }
+}
+
+void MainWindow::initTree()
+{
+    QTreeWidgetItem *cat = new QTreeWidgetItem(ui->treeWidget);
+    cat->setText(0, "res");
+    cat->setIcon(0, m_icon_provider.icon(QFileIconProvider::Folder));
+    initTreeFromPath("res", cat);
 }
 
 void MainWindow::quitSelected()

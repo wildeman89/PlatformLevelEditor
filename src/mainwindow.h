@@ -40,28 +40,12 @@ private:
 
     std::vector<QString> m_backgrounds;
     bool m_editing_enabled;
-
-    // tree categories
-    QTreeWidgetItem *m_tree_begin_end;
-    QTreeWidgetItem *m_tree_tiles;
-    QTreeWidgetItem *m_tree_enemies;
-    QTreeWidgetItem *m_tree_powerups;
-
-    // default icons
     QFileIconProvider m_icon_provider;
-
-    // pixmaps
     std::unordered_map<QString, QPixmap *> m_pixmaps;
-
-    // object categories
-    std::unordered_map<QString, std::string> m_categories;
-
     QString m_file_save_path;
 
-    void initTreeCategories();
     void loadConfigBackground();
-    void loadConfigObjects();
-
+    void initTreeFromPath(const QString &path, QTreeWidgetItem *parent);
     void disableEditor();
     void enableEditor();
     bool isEditing();
@@ -71,6 +55,8 @@ private:
 signals:
 
 public slots:
+
+    void initTree();
 
     void quitSelected();
     void newLevelSelected();
