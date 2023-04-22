@@ -25,6 +25,8 @@ public slots:
     void createPressed();
     void cancelPressed();
 
+    void setHeight(const QString &str);
+
 signals:
 
     void finished(const QString &name,

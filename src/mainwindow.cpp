@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_scene = new EditorScene(this);
     ui->graphicsView->setScene(m_scene);
 
+    loadConfigBackground();
     initTree();
     disableEditor();
 
@@ -204,6 +205,18 @@ void MainWindow::clearLevel()
 
 void MainWindow::loadConfigBackground()
 {
+    QDir dir("res/background");
+    dir.setSorting(QDir::SortFlag::Name);
+    dir.setFilter(QDir::Files | QDir::NoDotAndDotDot);
+    QDirIterator files(dir, QDirIterator::Subdirectories);
+
+    while (files.hasNext()) {
+        QString file_path = files.next();
+        m_backgrounds.push_back(file_path);
+        m_pixmaps[file_path] = new QPixmap(file_path);
+    }
+
+
 }
 
 void MainWindow::initTreeFromPath(const QString &path, QTreeWidgetItem *parent)
@@ -211,6 +224,10 @@ void MainWindow::initTreeFromPath(const QString &path, QTreeWidgetItem *parent)
     QDirIterator dirs(path, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
     while (dirs.hasNext()) {
         QString dir_name = dirs.next();
+
+        if(dir_name == "res/background") {
+            continue;
+        }
 
         QTreeWidgetItem *cat = new QTreeWidgetItem(parent);
         cat->setText(0, dir_name);
@@ -365,7 +382,9 @@ void MainWindow::createLevel(const QString &name,
                           size.width() + BORDER * 2,
                           size.height() + BORDER * 2);
 
-    m_scene->addRect(QRectF(QPointF(0,0), size));
+    QGraphicsRectItem * rect =m_scene->addRect(QRectF(QPointF(0,0), size));
+
+    rect->setBrush(QBrush(*m_pixmaps[m_level_background]));
 
     enableEditor();
 }

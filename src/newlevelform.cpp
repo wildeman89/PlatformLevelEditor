@@ -18,12 +18,17 @@ NewLevelForm::NewLevelForm(const std::vector<QString> &backgrounds,
     ui->levelwidth->setValidator(dval);
     ui->levelheight->setValidator(dval);
 
+    int index = 0;
     for(const QString &val : backgrounds) {
         ui->backgrounds->addItem(val);
+        ui->backgrounds->setItemIcon(index++, QIcon(val));
     }
+
+    setHeight(ui->backgrounds->currentText());
 
     connect(ui->createbutton, &QPushButton::clicked, this, &NewLevelForm::createPressed);
     connect(ui->cancelbutton, &QPushButton::clicked, this, &NewLevelForm::cancelPressed);
+    connect(ui->backgrounds, &QComboBox::currentTextChanged, this, &NewLevelForm::setHeight);
 }
 
 NewLevelForm::~NewLevelForm()
@@ -71,4 +76,13 @@ void NewLevelForm::createPressed()
 void NewLevelForm::cancelPressed()
 {
     deleteLater();
+}
+
+void NewLevelForm::setHeight(const QString &str)
+{
+    if(str.isEmpty()) {
+        return;
+    }
+    QPixmap px(str);
+    ui->levelheight->setText(QString::number(px.height()));
 }
